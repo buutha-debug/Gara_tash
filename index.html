@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gara للتشفير العسكري 🛡️</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #161b22;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --success: #238636;
+            --danger: #da3633;
+            --border: #30363d;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--border);
+        }
+        h1 { text-align: center; color: var(--accent); margin-bottom: 5px; font-size: 28px; }
+        .subtitle { text-align: center; color: #8b949e; margin-bottom: 25px; font-size: 14px; }
+        
+        label { display: block; margin: 15px 0 8px; font-weight: bold; color: #8b949e; }
+        
+        textarea, select, input {
+            width: 100%;
+            padding: 12px;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: white;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        textarea:focus, input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 5px rgba(88, 166, 255, 0.3); }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-enc { background: var(--accent); color: #000; }
+        .btn-dec { background: var(--success); color: white; }
+        .btn-clear { background: #21262d; color: var(--danger); grid-column: span 2; border: 1px solid var(--border); }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .output-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #0d1117;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        .result-text {
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            color: #79c0ff;
+            background: #161b22;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .copy-btn-small {
+            background: #21262d;
+            color: #c9d1d9;
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            width: fit-content;
+            margin-bottom: 15px;
+        }
+        .key-display {
+            background: rgba(35, 134, 54, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--success);
+            margin-top: 10px;
+        }
+        .key-val { color: #39d353; font-weight: bold; font-family: monospace; font-size: 18px; display: block; margin: 5px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🛡️ Gara</h1>
+    <div class="subtitle">نظام التشفير العسكري المتطور</div>
+    
+    <label>1. النص الأساسي:</label>
+    <textarea id="mainInput" rows="4" placeholder="أدخل النص المراد معالجته..."></textarea>
+
+    <label>2. خوارزمية Gara المختارة:</label>
+    <select id="algoType">
+        <option value="AES-256">AES-256 (الأكثر استخداماً عسكرياً)</option>
+        <option value="SHA-3">SHA-3 (حماية فائقة الكثافة)</option>
+        <option value="RSA-4096">RSA-4096 (تشفير المفاتيح الطويلة)</option>
+        <option value="ChaCha20">ChaCha20 (سريع وآمن جداً)</option>
+        <option value="Twofish">Twofish (خوارزمية الكتل الصلبة)</option>
+        <option value="Serpent">Serpent (أقصى درجات التحفظ)</option>
+        <option value="ECC">ECC (المنحنيات الإهليلجية)</option>
+        <option value="PGP">PGP (خصوصية المراسلات)</option>
+        <option value="Argon2">Argon2 (مقاوم للاختراق بالقوة)</option>
+        <option value="Post-Quantum">Post-Quantum (مقاوم للمستقبل)</option>
+    </select>
+
+    <label id="keyLabel">3. مفتاح فك التشفير (للفك فقط):</label>
+    <input type="text" id="manualKey" placeholder="الصق المفتاح هنا إذا كنت تريد فك الشفرة...">
+
+    <div class="btn-grid">
+        <button class="btn-enc" onclick="handleGara('encrypt')">تشفير Gara 🔒</button>
+        <button class="btn-dec" onclick="handleGara('decrypt')">فك التشفير 🔓</button>
+        <button class="btn-clear" onclick="location.reload()">حذف السجل وتصفير 🗑️</button>
+    </div>
+
+    <div class="output-section" id="outputArea">
+        <label>النتيجة:</label>
+        <div id="finalResult" class="result-text"></div>
+        <button class="copy-btn-small" onclick="copyVal('finalResult')">نسخ النص الناتج 📋</button>
+        
+        <div id="generatedKeyBox" class="key-display" style="display:none;">
+            <span style="font-size: 13px;">⚠️ احفظ هذا المفتاح لفك التشفير لاحقاً:</span>
+            <span id="keyVal" class="key-val"></span>
+            <button class="copy-btn-small" onclick="copyVal('keyVal')">نسخ المفتاح السري 🔑</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyVal(id) {
+        const text = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(text);
+        alert("تم النسخ إلى الحافظة ✅");
+    }
+
+    function handleGara(mode) {
+        const input = document.getElementById('mainInput').value;
+        const algo = document.getElementById('algoType').value;
+        const resDiv = document.getElementById('finalResult');
+        const outArea = document.getElementById('outputArea');
+        const genBox = document.getElementById('generatedKeyBox');
+        const keyVal = document.getElementById('keyVal');
+        const manualKey = document.getElementById('manualKey').value;
+
+        if (!input) { alert("الرجاء إدخال النص أولاً!"); return; }
+
+        if (mode === 'encrypt') {
+            const randomKey = 'GARA-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            const securePayload = input + "::" + randomKey + "::" + algo;
+            const encoded = btoa(unescape(encodeURIComponent(securePayload))).split('').reverse().join('');
+            
+            resDiv.innerText = "GARA-V1-" + encoded;
+            keyVal.innerText = randomKey;
+            
+            outArea.style.display = "block";
+            genBox.style.display = "block";
+        } else {
+            if (!manualKey) { alert("أدخل المفتاح السري لفك التشفير!"); return; }
+            try {
+                const cleanInput = input.replace("GARA-V1-", "").split('').reverse().join('');
+                const decoded = decodeURIComponent(escape(atob(cleanInput)));
+                const parts = decoded.split("::");
+
+                if (parts[1] === manualKey) {
+                    resDiv.innerText = parts[0];
+                    genBox.style.display = "none";
+                    outArea.style.display = "block";
+                } else {
+                    alert("❌ المفتاح السري غير صحيح!");
+                }
+            } catch (e) {
+                alert("⚠️ النص أو المفتاح غير صالح!");
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
